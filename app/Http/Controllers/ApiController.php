@@ -7,25 +7,18 @@ use App\Mail\MessageMail;
 use App\Models\Info;
 use App\Models\JobExperience;
 use App\Models\Message;
-use App\Models\Portfolio;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
-class ApiController extends Controller
-{
-    public function getInfo(){
+class ApiController extends Controller {
+    public function getInfo() {
         return Info::first();
     }
 
-    public function getJobExperience(){
+    public function getJobExperience() {
         return JobExperience::all();
     }
 
-    public function getPortfolio(){
-        return Portfolio::all();
-    }
-
-    public function sendMessage(MessageRequest $request){
+    public function sendMessage(MessageRequest $request) {
         Message::create($request->validated());
 
         Mail::to(env('DEFAULT_MAIL'))->send(new MessageMail($request->all()));
