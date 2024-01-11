@@ -21,6 +21,7 @@ class PortfolioRequest extends FormRequest {
         return [
             'category_id' => 'required',
             'title'       => 'required|max:50',
+            'url'         => 'required|max:250',
             'description' => 'required|max:5000',
             'cover_photo' => 'required|image|mimes:png,jpg,jpeg,svg|max:1024',
         ];

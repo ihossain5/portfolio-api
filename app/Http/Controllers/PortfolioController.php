@@ -17,6 +17,7 @@ class PortfolioController extends Controller {
                 'title'       => $portfolio->title,
                 'description' => $portfolio->description,
                 'cover_photo' => $portfolio->cover_photo,
+                'url'         => $portfolio->url,
             ];
         });
 

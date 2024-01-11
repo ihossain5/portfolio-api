@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('cover_photo');
             $table->string('description');
+            $table->string('url');
             $table->timestamps();
         });
     }
