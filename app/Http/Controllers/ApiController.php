@@ -5,13 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MessageRequest;
 use App\Http\Resources\InfoResource;
 use App\Http\Resources\JobExperienceResource;
+use App\Http\Resources\SkillResource;
 use App\Mail\MessageMail;
 use App\Models\Info;
 use App\Models\JobExperience;
 use App\Models\Message;
+use App\Models\Skill;
 use Illuminate\Support\Facades\Mail;
 
 class ApiController extends Controller {
+    public function getSkill() {
+        $skills = Skill::query()
+            ->select('title', 'value')
+            ->get();
+
+        return $this->apiSuccessResponse(SkillResource::collection($skills), 'Data retrieved successfully');
+    }
+
     public function getInfo() {
         $info = Info::query()
             ->select('name', 'photo', 'designation', 'about', 'email', 'phone', 'phone_2', 'address')

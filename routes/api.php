@@ -15,10 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-Route::get('info', [ApiController::class, 'getInfo']);
-Route::get('job-experience', [ApiController::class, 'getJobExperience']);
-Route::post('send-message', [ApiController::class, 'sendMessage']);
+Route::controller(ApiController::class)
+    ->group(function () {
+        Route::get('/skills', 'getSkill');
+        Route::get('/info', 'getInfo');
+        Route::get('/job-experience', 'getJobExperience');
+        Route::get('/send-message', 'sendMessage');
 
+    });
 
 Route::controller(PortfolioController::class)
     ->prefix('projects')
