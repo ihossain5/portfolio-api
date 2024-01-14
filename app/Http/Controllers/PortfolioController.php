@@ -3,25 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PortfolioRequest;
+use App\Http\Resources\PortfolioResource;
 use App\Models\Portfolio;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class PortfolioController extends Controller {
     public function getPortfolio() {
-        $portfolios = Portfolio::all();
+        $portfolios = Portfolio::query()->select('id','title','description','cover_photo','url')->get();
 
-        $transformedPortfolios = $portfolios->map(function ($portfolio) {
-            return [
-                'id'          => $portfolio->id,
-                'title'       => $portfolio->title,
-                'description' => $portfolio->description,
-                'cover_photo' => $portfolio->cover_photo,
-                'url'         => $portfolio->url,
-            ];
-        });
-
-        return $this->apiSuccessResponse($transformedPortfolios, 'Portfolios retrieved successfully');
+        return $this->apiSuccessResponse(PortfolioResource::collection($portfolios), 'Portfolios retrieved successfully');
     }
 
     public function storeProject(PortfolioRequest $request) {
@@ -52,7 +43,7 @@ class PortfolioController extends Controller {
 
         $portfolio->update($validatedData);
 
-        return $this->apiSuccessResponse($portfolio, 'Portfolio updated successfully', 200);
+        return $this->apiSuccessResponse(new PortfolioResource($portfolio), 'Portfolio updated successfully');
     }
 
     public function destroyProject(Portfolio $portfolio) {
@@ -60,6 +51,6 @@ class PortfolioController extends Controller {
 
         $portfolio->delete();
 
-        return $this->apiSuccessResponse([], 'Portfolio deleted successfully', 200);
+        return $this->apiSuccessResponse([], 'Portfolio deleted successfully');
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MessageRequest;
+use App\Http\Resources\InfoResource;
+use App\Http\Resources\JobExperienceResource;
 use App\Mail\MessageMail;
 use App\Models\Info;
 use App\Models\JobExperience;
@@ -11,11 +13,20 @@ use Illuminate\Support\Facades\Mail;
 
 class ApiController extends Controller {
     public function getInfo() {
-        return Info::first();
+        $info = Info::query()
+            ->select('name', 'photo', 'designation', 'about', 'email', 'phone', 'phone_2', 'address')
+            ->first();
+
+        return $this->apiSuccessResponse(new InfoResource($info), 'Info retrieved successfully');
     }
 
     public function getJobExperience() {
-        return JobExperience::all();
+        $jobs = JobExperience::
+            query()
+            ->select('company_name', 'designation', 'responsibilities', 'start_date', 'end_date')
+            ->get();
+
+        return $this->apiSuccessResponse(JobExperienceResource::collection($jobs), 'Data retrieved successfully');
     }
 
     public function sendMessage(MessageRequest $request) {
@@ -23,6 +34,6 @@ class ApiController extends Controller {
 
         Mail::to(env('DEFAULT_MAIL'))->send(new MessageMail($request->all()));
 
-        return true;
+        return $this->apiSuccessResponse([], 'Message created successfully');
     }
 }
