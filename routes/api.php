@@ -20,7 +20,7 @@ Route::controller(ApiController::class)
         Route::get('/skills', 'getSkill');
         Route::get('/info', 'getInfo');
         Route::get('/job-experience', 'getJobExperience');
-        Route::get('/send-message', 'sendMessage');
+        Route::post('/send-message', 'sendMessage');
 
     });
 
