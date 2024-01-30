@@ -16,7 +16,7 @@ class PortfolioResource extends JsonResource {
             'id'          => $this->id,
             'title'       => $this->title,
             'description' => $this->description,
-            'cover_photo' => $this->cover_photo,
+            'cover_photo' => url("uploaded-files/{$this->cover_photo}"),
             'url'         => $this->url ?? '#',
         ];
     }

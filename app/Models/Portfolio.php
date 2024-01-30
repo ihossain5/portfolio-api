@@ -12,10 +12,4 @@ class Portfolio extends Model
 
     protected $fillable = ['category_id', 'title','cover_photo','description','url'];
 
-    protected function coverPhoto(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string $value) => url("uploaded-files/{$value}"),
-        );
-    }
 }
