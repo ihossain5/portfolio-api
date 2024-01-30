@@ -6,7 +6,7 @@ use App\Models\Message;
 
 class StoreMessage {
 
-    public function handle($validatedData)
+    public function handle(array $validatedData): Message
     {
         return Message::create($validatedData);
     }

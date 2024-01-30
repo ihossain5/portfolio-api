@@ -6,6 +6,7 @@ use App\Http\Requests\PortfolioRequest;
 use App\Http\Resources\PortfolioResource;
 use App\Models\Portfolio;
 use App\Services\PortfolioService;
+use Illuminate\Http\JsonResponse;
 
 class PortfolioController extends Controller {
 
@@ -15,14 +16,14 @@ class PortfolioController extends Controller {
         $this->portfolioService = $portfolioService;
     }
 
-    public function getPortfolio() {
+    public function getPortfolio(): JsonResponse {
 
         $portfolios = $this->portfolioService->allPortfolios();
 
         return $this->apiSuccessResponse(PortfolioResource::collection($portfolios), 'Portfolios retrieved successfully');
     }
 
-    public function storeProject(PortfolioRequest $request) {
+    public function storeProject(PortfolioRequest $request): JsonResponse {
 
         $data =  $this->portfolioService->store($request->validated());
 
@@ -30,14 +31,14 @@ class PortfolioController extends Controller {
 
     }
 
-    public function updateProject(PortfolioRequest $request, Portfolio $portfolio) {
+    public function updateProject(PortfolioRequest $request, Portfolio $portfolio): JsonResponse {
 
         $data =  $this->portfolioService->update($portfolio, $request->validated());
 
         return $this->apiSuccessResponse(new PortfolioResource($data), 'Portfolio updated successfully');
     }
 
-    public function destroyProject(Portfolio $portfolio) {
+    public function destroyProject(Portfolio $portfolio): JsonResponse {
         
         $this->portfolioService->delete($portfolio);
 

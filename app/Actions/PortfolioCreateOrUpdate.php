@@ -6,14 +6,10 @@ use App\Models\Portfolio;
 
 class PortfolioCreateOrUpdate {
 
-    public function handle($data, $portfolio = null) {
-
-        if ($portfolio) {
-            $portfolio->update($data);
-        } else {
-            $portfolio = Portfolio::create($data);
-        }
-
-        return $portfolio;
+    public function handle(array $data, ?Portfolio $portfolio = null): Portfolio {
+       
+        return $portfolio
+        ? tap($portfolio)->update($data)
+        : Portfolio::create($data);
     }
 }
