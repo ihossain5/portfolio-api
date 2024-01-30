@@ -2,47 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\SendMail;
+use App\Actions\StoreMessage;
 use App\Http\Requests\MessageRequest;
 use App\Http\Resources\InfoResource;
 use App\Http\Resources\JobExperienceResource;
 use App\Http\Resources\SkillResource;
-use App\Mail\MessageMail;
-use App\Models\Info;
-use App\Models\JobExperience;
-use App\Models\Message;
-use App\Models\Skill;
-use Illuminate\Support\Facades\Mail;
+use App\Services\ApiService;
 
 class ApiController extends Controller {
+
+    public $apiService;
+
+    public function __construct(ApiService $apiService) {
+        $this->apiService = $apiService;
+    }
+
     public function getSkill() {
-        $skills = Skill::query()
-            ->select('title', 'value')
-            ->get();
+
+        $skills = $this->apiService->allSkills();
 
         return $this->apiSuccessResponse(SkillResource::collection($skills), 'Data retrieved successfully');
     }
 
     public function getInfo() {
-        $info = Info::query()
-            ->select('name', 'photo', 'designation', 'about', 'email', 'phone', 'phone_2', 'address')
-            ->first();
+
+        $info = $this->apiService->info();
 
         return $this->apiSuccessResponse(new InfoResource($info), 'Info retrieved successfully');
     }
 
     public function getJobExperience() {
-        $jobs = JobExperience::
-            query()
-            ->select('company_name', 'designation', 'responsibilities', 'start_date', 'end_date')
-            ->get();
 
-        return $this->apiSuccessResponse(JobExperienceResource::collection($jobs), 'Data retrieved successfully');
+        $jobExperiences = $this->apiService->allJobExperiences();
+
+        return $this->apiSuccessResponse(JobExperienceResource::collection($jobExperiences), 'Data retrieved successfully');
     }
 
-    public function sendMessage(MessageRequest $request) {
-        Message::create($request->validated());
+    public function sendMessage(MessageRequest $request, StoreMessage $storeMessageAction, SendMail $mailAction) {
 
-        Mail::to(env('DEFAULT_MAIL'))->send(new MessageMail($request->all()));
+        $validatedData = $request->validated();
+
+        $storeMessageAction->handle($validatedData);
+
+        $mailAction->handle($validatedData);
 
         return $this->apiSuccessResponse([], 'Message created successfully');
     }
